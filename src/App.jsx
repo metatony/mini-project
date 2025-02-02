@@ -71,6 +71,7 @@ function App() {
         {showSidebar ? "Hide Sidebar" : "Show Sidebar"}
       </button>
 
+      {/* Sidebar with toggle controls */}
       <div className={`sidebar ${showSidebar ? "visible" : ""}`}>
         <label>
           <input
@@ -97,6 +98,8 @@ function App() {
           Toggle Idle Time
         </label>
       </div>
+
+      {/* React logo image with dynamic styles */}
       <img
         src={reactLogo}
         className="logo react"
@@ -110,6 +113,7 @@ function App() {
         }}
         onClick={handleClick}
       />
+      {/* Display idle time only if the toggle is enabled */}
       {showIdleTime && <p>Idle Time: {idleTime} seconds</p>}
     </div>
   );
