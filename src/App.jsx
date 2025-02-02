@@ -1,10 +1,12 @@
 import reactLogo from "./assets/react.svg";
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function App() {
   const [rotateDirection, setRotateDirection] = useState(1); // used 1 for clockwise and -1 for anti-clockwise
   const [iconSize, setIconSize] = useState(100); // default icon size
+  const [idleTime, setIdleTime] = useState(0);
+  const [isMoving, setIsMoving] = useState(false);
 
   const handleClick = () => {
     setRotateDirection((prev) => prev * -1); // this function reverses the rotation direction when icon is clicked
@@ -16,6 +18,40 @@ function App() {
 
     setIconSize(newSize);
   };
+
+  useEffect(() => {
+    let idleTimer;
+
+    const resetIdleTimer = () => {
+      setIsMoving(true);
+      setIdleTime(0); // reset idle time when movement is detected
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => setIsMoving(false), 500); // consider idle if no movement for 0.5 sec
+    };
+
+    window.addEventListener("mousemove", resetIdleTimer);
+
+    return () => {
+      window.removeEventListener("mousemove", resetIdleTimer);
+      clearTimeout(idleTimer);
+    };
+  }, []);
+
+  useEffect(() => {
+    let interval;
+    if (!isMoving) {
+      interval = setInterval(() => {
+        setIdleTime((prev) => prev + 1);
+      }, 1000);
+    } else {
+      clearInterval(interval);
+    }
+
+    return () => clearInterval(interval);
+  }, [isMoving]);
+
+
+
   return (
     <div onMouseMove={handleMouseMove}>
       <div>
@@ -32,6 +68,7 @@ function App() {
           }}
           onClick={handleClick}
         />
+        <p>Idle Time: {idleTime}</p>
       </div>
     </div>
   );
