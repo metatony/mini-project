@@ -3,21 +3,24 @@ import "./App.css";
 import { useEffect, useState } from "react";
 
 function App() {
+  // state variables to handle different functionalities
   const [rotateDirection, setRotateDirection] = useState(1); // used 1 for clockwise and -1 for anti-clockwise
   const [iconSize, setIconSize] = useState(100); // default icon size
-  const [idleTime, setIdleTime] = useState(0);
-  const [isMoving, setIsMoving] = useState(false);
-  const [showSidebar, setShowSidebar] = useState(false);
-  const [showRotation, setShowRotation] = useState(true);
-  const [showResize, setShowResize] = useState(true);
-  const [showIdleTime, setShowIdleTime] = useState(true);
+  const [idleTime, setIdleTime] = useState(0); //tracks how long the mouse has been idle
+  const [isMoving, setIsMoving] = useState(false); // tracks if the mouse is moving
+  const [showSidebar, setShowSidebar] = useState(false); // controls sidebar visibility
+  const [showRotation, setShowRotation] = useState(true); // toggle for rotation
+  const [showResize, setShowResize] = useState(true); // toggle for image resizing
+  const [showIdleTime, setShowIdleTime] = useState(true); // toggle for idle time tracking
 
+  // Function to handle icon rotation when clicked
   const handleClick = () => {
     if (showRotation) {
       setRotateDirection((prev) => prev * -1); // this function reverses the rotation direction when icon is clicked
     }
   };
 
+  // Function to adjust icon size based on mouse position
   const handleMouseMove = (e) => {
     const { clientX, clientY } = e;
     if (showResize) {
@@ -26,13 +29,14 @@ function App() {
     }
   };
 
+  // Effect to track mouse idle time
   useEffect(() => {
     let idleTimer;
 
     const resetIdleTimer = () => {
       setIsMoving(true);
       setIdleTime(0); // reset idle time when movement is detected
-      clearTimeout(idleTimer);
+      clearTimeout(idleTimer); // Clear any existing timer
       idleTimer = setTimeout(() => setIsMoving(false), 500);
     };
 
@@ -44,6 +48,7 @@ function App() {
     };
   }, []);
 
+  // Effect to increment idle time every second when the mouse is idle
   useEffect(() => {
     let interval;
     if (!isMoving && showIdleTime) {
